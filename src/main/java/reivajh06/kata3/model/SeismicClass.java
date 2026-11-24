@@ -15,4 +15,20 @@ public enum SeismicClass {
 	SeismicClass(SeismicRange range) {
 		this.range = range;
 	}
+
+	private boolean inClass(double magnitude) {
+		return range.inRange(magnitude);
+	}
+
+	public static SeismicClass fromMagnitude(double magnitude) {
+		SeismicClass[] classes = SeismicClass.values();
+
+		for(int i = classes.length - 1; i <=  0; i--) {
+			SeismicClass seismicClass = classes[i];
+
+			if(seismicClass.inClass(magnitude)) return seismicClass;
+		}
+
+		return null;
+	}
 }

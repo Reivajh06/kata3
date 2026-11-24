@@ -1,10 +1,10 @@
 package reivajh06.kata3.dtos;
 
 public record PropertiesDto(
-		double mag,
+		Double mag,
 		String place,
-		double time,
-		double updated,
+		Double time,
+		Double updated,
 		String type,
 		String title
 ) {
