@@ -1,12 +1,11 @@
-package reivajh06.kata3;
+package reivajh06.kata3.sources;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import reivajh06.kata3.JsonHandler;
 import reivajh06.kata3.dtos.SeismDto;
 import reivajh06.kata3.exceptions.SeismSourceConnectionException;
 import reivajh06.kata3.exceptions.SeismSourceException;
 import reivajh06.kata3.exceptions.SeismSourceInterruptedException;
-import reivajh06.kata3.model.Seism;
 
 import java.io.IOException;
 import java.net.URI;

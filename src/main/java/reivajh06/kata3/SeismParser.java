@@ -6,31 +6,31 @@ import reivajh06.kata3.dtos.SeismDto;
 import reivajh06.kata3.model.*;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class SeismParser {
 
 	private final Logger logger;
+	Map<String, Object> invalidValues;
 
 	public SeismParser() {
 		this.logger = Logger.getLogger(SeismParser.class.getName());
 	}
 
 	public Optional<Seism> parse(SeismDto dto) {
+		invalidValues = new HashMap<>();
+
 		if(dto.id() == null || dto.id().isEmpty()) {
 			logger.severe("MALFORMED DTO ENCOUNTERED: ID IS EITHER EMPTY OR NULL");
 			return Optional.empty();
 		}
 
-		if(invalidProperties(dto.properties())) {
-			logger.warning("DTO OF ID %s HAS MALFORMED OR MISSING PROPERTIES: %s".formatted(dto.id(), dto.properties()));
-			return Optional.empty();
-		}
+		validateProperties(dto.properties());
+		validateGeometry(dto.geometry());
 
-		if(invalidGeometry(dto.geometry())) {
-			logger.warning("DTO OF ID %s HAS MALFORMED OR MISSING GEOMETRY: %s".formatted(dto.id(), dto.geometry()));
+		if(!invalidValues.isEmpty()) {
+			logger.warning("DTO OF ID %s HAS MALFORMED OR MISSING VALUES: %s".formatted(dto.id(), invalidValues));
 			return Optional.empty();
 		}
 
@@ -55,22 +55,20 @@ public class SeismParser {
 		return Optional.of(builder.build());
 	}
 
-	private boolean invalidGeometry(GeometryDto geometry) {
-		if(!isValid(geometry.coordinates()[0])) return true;
-		if(!isValid(geometry.coordinates()[1])) return true;
-		if(!isValid(geometry.coordinates()[2])) return true;
-
-		return !isValid(geometry.coordinates()[2]);
+	private void validateGeometry(GeometryDto geometry) {
+		if(!isValid(geometry.coordinates()[0])) invalidValues.put("latitude", geometry.coordinates()[0]);
+		if(!isValid(geometry.coordinates()[1])) invalidValues.put("longitude", geometry.coordinates()[1]);
+		if(!isValid(geometry.coordinates()[2])) invalidValues.put("depth", geometry.coordinates()[2]);
 	}
 
-	private boolean invalidProperties(PropertiesDto properties) {
-		if(properties.type() == null || properties.type().isEmpty()) return true;
-		if(properties.title() == null || properties.title().isEmpty()) return true;
-		if(properties.place() == null || properties.place().isEmpty()) return true;
-		if(properties.mag() == null) return true;
-		if(properties.time() == null || properties.time().isInfinite() || properties.time().isNaN()) return true;
+	private void validateProperties(PropertiesDto properties) {
+		if(properties.type() == null || properties.type().isEmpty()) invalidValues.put("type", properties.type());
+		if(properties.title() == null || properties.title().isEmpty()) invalidValues.put("title", properties.title());
+		if(properties.place() == null || properties.place().isEmpty()) invalidValues.put("place", properties.place());
 
-		return properties.updated() == null || properties.updated().isInfinite() || properties.updated().isNaN();
+		if(!isValid(properties.mag())) invalidValues.put("magnitude", properties.mag());
+		if(!isValid(properties.time())) invalidValues.put("time", properties.time());
+		if(!isValid(properties.updated())) invalidValues.put("updated", properties.updated());
 	}
 
 	public List<Optional<Seism>> parseAll(List<SeismDto> dtos) {

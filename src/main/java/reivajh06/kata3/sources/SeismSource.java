@@ -1,4 +1,4 @@
-package reivajh06.kata3;
+package reivajh06.kata3.sources;
 
 import reivajh06.kata3.dtos.SeismDto;
 
