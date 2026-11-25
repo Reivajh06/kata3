@@ -2,6 +2,10 @@ package reivajh06.kata3;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+
+import java.time.Instant;
 
 public class JsonHandler {
 
@@ -11,11 +15,13 @@ public class JsonHandler {
 	public JsonHandler() {
 		gson = new GsonBuilder()
 				.serializeNulls()
+				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (i, t, j) -> new JsonPrimitive(i.toString()))
 				.create();
 
 		gsonFormatted = new GsonBuilder()
 				.serializeNulls()
 				.setPrettyPrinting()
+				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (i, t, j) -> new JsonPrimitive(i.toString()))
 				.create();;
 	}
 

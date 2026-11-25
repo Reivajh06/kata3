@@ -1,5 +1,7 @@
 package reivajh06.kata3.model;
 
+import java.util.Arrays;
+
 public enum SeismicClass {
 
 	MICRO(SeismicRange.openLeft(3.0)),
@@ -21,14 +23,9 @@ public enum SeismicClass {
 	}
 
 	public static SeismicClass fromMagnitude(double magnitude) {
-		SeismicClass[] classes = SeismicClass.values();
-
-		for(int i = classes.length - 1; i <=  0; i--) {
-			SeismicClass seismicClass = classes[i];
-
-			if(seismicClass.inClass(magnitude)) return seismicClass;
-		}
-
-		return null;
+		return Arrays.stream(SeismicClass.values())
+				.filter(c -> c.inClass(magnitude))
+				.findFirst()
+				.orElse(null);
 	}
 }
