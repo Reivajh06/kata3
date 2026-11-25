@@ -8,14 +8,31 @@ import reivajh06.kata3.model.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class SeismParser {
 
-	public Optional<Seism> parse(SeismDto dto) {
-		if(dto.id().isEmpty()) return Optional.empty();
+	private final Logger logger;
 
-		if(!invalidProperties(dto.properties())) return Optional.empty();
-		if(!invalidGeometry(dto.geometry())) return Optional.empty();
+	public SeismParser() {
+		this.logger = Logger.getLogger(SeismParser.class.getName());
+	}
+
+	public Optional<Seism> parse(SeismDto dto) {
+		if(dto.id() == null || dto.id().isEmpty()) {
+			logger.severe("MALFORMED DTO ENCOUNTERED: ID IS EITHER EMPTY OR NULL");
+			return Optional.empty();
+		}
+
+		if(invalidProperties(dto.properties())) {
+			logger.warning("DTO OF ID %s HAS MALFORMED OR MISSING PROPERTIES: %s".formatted(dto.id(), dto.properties()));
+			return Optional.empty();
+		}
+
+		if(invalidGeometry(dto.geometry())) {
+			logger.warning("DTO OF ID %s HAS MALFORMED OR MISSING GEOMETRY: %s".formatted(dto.id(), dto.geometry()));
+			return Optional.empty();
+		}
 
 		Place place = new Place(
 				dto.properties().place(),
@@ -41,15 +58,19 @@ public class SeismParser {
 	private boolean invalidGeometry(GeometryDto geometry) {
 		if(!isValid(geometry.coordinates().get(0))) return false;
 		if(!isValid(geometry.coordinates().get(1))) return false;
+		if(!isValid(geometry.coordinates().get(2))) return false;
 
 		return isValid(geometry.coordinates().get(2));
 	}
 
 	private boolean invalidProperties(PropertiesDto properties) {
-		if(properties.type().isEmpty()) return false;
-		if(properties.title().isEmpty()) return false;
+		if(properties.type() == null || properties.type().isEmpty()) return true;
+		if(properties.title() == null || properties.title().isEmpty()) return true;
+		if(properties.place() == null || properties.place().isEmpty()) return true;
+		if(properties.mag() == null) return true;
+		if(properties.time() == null || properties.time().isInfinite() || properties.time().isNaN()) return true;
 
-		return true;
+		return properties.updated() == null || properties.updated().isInfinite() || properties.updated().isNaN();
 	}
 
 	public List<Optional<Seism>> parseAll(List<SeismDto> dtos) {
@@ -59,6 +80,6 @@ public class SeismParser {
 	}
 
 	private boolean isValid(Double value) {
-		return value == null || Double.isNaN(value) || Double.isInfinite(value);
+		return value != null && !value.isNaN() && !value.isInfinite();
 	}
 }
