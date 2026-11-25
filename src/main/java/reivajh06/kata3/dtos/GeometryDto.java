@@ -1,8 +1,14 @@
 package reivajh06.kata3.dtos;
 
-import java.util.Map;
+import java.util.Arrays;
 
 public record GeometryDto(
-		Map<Integer, Double> coordinates
+		double[] coordinates
 ) {
+	@Override
+	public String toString() {
+		return "GeometryDto{" +
+				"coordinates=" + Arrays.toString(coordinates) +
+				'}';
+	}
 }

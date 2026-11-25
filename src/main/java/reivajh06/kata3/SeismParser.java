@@ -37,9 +37,9 @@ public class SeismParser {
 		Place place = new Place(
 				dto.properties().place(),
 				new Coordinate(
-						dto.geometry().coordinates().get(0),
-						dto.geometry().coordinates().get(1),
-						dto.geometry().coordinates().get(2)
+						dto.geometry().coordinates()[0],
+						dto.geometry().coordinates()[1],
+						dto.geometry().coordinates()[2]
 						)
 		);
 
@@ -56,11 +56,11 @@ public class SeismParser {
 	}
 
 	private boolean invalidGeometry(GeometryDto geometry) {
-		if(!isValid(geometry.coordinates().get(0))) return false;
-		if(!isValid(geometry.coordinates().get(1))) return false;
-		if(!isValid(geometry.coordinates().get(2))) return false;
+		if(!isValid(geometry.coordinates()[0])) return true;
+		if(!isValid(geometry.coordinates()[1])) return true;
+		if(!isValid(geometry.coordinates()[2])) return true;
 
-		return isValid(geometry.coordinates().get(2));
+		return !isValid(geometry.coordinates()[2]);
 	}
 
 	private boolean invalidProperties(PropertiesDto properties) {

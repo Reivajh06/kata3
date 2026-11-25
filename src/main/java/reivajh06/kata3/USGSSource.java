@@ -1,9 +1,12 @@
 package reivajh06.kata3;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import reivajh06.kata3.dtos.SeismDto;
 import reivajh06.kata3.exceptions.SeismSourceConnectionException;
 import reivajh06.kata3.exceptions.SeismSourceException;
 import reivajh06.kata3.exceptions.SeismSourceInterruptedException;
+import reivajh06.kata3.model.Seism;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,6 +34,7 @@ public class USGSSource implements SeismSource {
 
 	private final String providerBasePath;
 	private Duration requestTimeout;
+	private final JsonHandler jsonHandler;
 
 	private USGSSource() {
 		this(REMOTE_USGS_PATH);
@@ -39,6 +43,7 @@ public class USGSSource implements SeismSource {
 	private USGSSource(String providerBasePath) {
 		this.providerBasePath = providerBasePath.endsWith("/") ? providerBasePath : providerBasePath + "/";
 		requestTimeout = Duration.of(3, ChronoUnit.MINUTES);
+		jsonHandler = new JsonHandler();
 	}
 
 	public String providerBasePath() {
@@ -62,6 +67,15 @@ public class USGSSource implements SeismSource {
 
 		try(HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+			seisms = jsonHandler.deserialize(response.body(), JsonObject.class)
+					.asMap()
+					.get("features")
+					.getAsJsonArray()
+					.asList()
+					.stream()
+					.map(j -> jsonHandler.deserialize(j.toString(), SeismDto.class))
+					.toList();
 
 		} catch(HttpTimeoutException e) {
 			throw new SeismSourceConnectionException("Ongoing request for seisms fetching has exceeded maximum amount of time allowed".formatted(providerBasePath, SUMMARY_FEEDS_ENDPOINT), e);

@@ -8,4 +8,16 @@ public record PropertiesDto(
 		String type,
 		String title
 ) {
+
+	@Override
+	public String toString() {
+		return "PropertiesDto{" +
+				"mag=" + mag +
+				", place='" + place + '\'' +
+				", time=" + time +
+				", updated=" + updated +
+				", type='" + type + '\'' +
+				", title='" + title + '\'' +
+				'}';
+	}
 }
