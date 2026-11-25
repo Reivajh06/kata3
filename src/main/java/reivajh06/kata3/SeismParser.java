@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class SeismParser {
 
 	private final Logger logger;
-	Map<String, Object> invalidValues;
+	private Map<String, Object> invalidValues;
 
 	public SeismParser() {
 		this.logger = Logger.getLogger(SeismParser.class.getName());
@@ -37,8 +37,8 @@ public class SeismParser {
 		Place place = new Place(
 				dto.properties().place(),
 				new Coordinate(
-						dto.geometry().coordinates()[0],
 						dto.geometry().coordinates()[1],
+						dto.geometry().coordinates()[0],
 						dto.geometry().coordinates()[2]
 						)
 		);
@@ -56,8 +56,8 @@ public class SeismParser {
 	}
 
 	private void validateGeometry(GeometryDto geometry) {
-		if(!isValid(geometry.coordinates()[0])) invalidValues.put("latitude", geometry.coordinates()[0]);
-		if(!isValid(geometry.coordinates()[1])) invalidValues.put("longitude", geometry.coordinates()[1]);
+		if(!isValid(geometry.coordinates()[0])) invalidValues.put("longitude", geometry.coordinates()[0]);
+		if(!isValid(geometry.coordinates()[1])) invalidValues.put("latitude", geometry.coordinates()[1]);
 		if(!isValid(geometry.coordinates()[2])) invalidValues.put("depth", geometry.coordinates()[2]);
 	}
 

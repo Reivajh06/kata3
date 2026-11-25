@@ -1,0 +1,31 @@
+{
+  "type": "FeatureCollection",
+  "metadata": { "generated": 1795603500000, "title": "Kata3 fixture", "status": 200, "count": 5 },
+  "features": [
+    {
+      "type": "Feature", "id": "ci1",
+      "properties": { "mag": 1.03, "place": "2 km N of Silver Lake, CA", "time": 1795603200250, "updated": 1795603407775, "type": "earthquake", "title": "M 1.0 - 2 km N of Silver Lake, CA", "alert": null },
+      "geometry": { "type": "Point", "coordinates": [-118.26617, 34.11117, 11.33] }
+    },
+    {
+      "type": "Feature", "id": "us1",
+      "properties": { "mag": 4.3, "place": "18 km SSW of Yonakuni, Japan", "time": 1795601925642, "updated": 1795602794040, "type": "earthquake", "title": "M 4.3 - 18 km SSW of Yonakuni, Japan" },
+      "geometry": { "type": "Point", "coordinates": [122.9622, 24.3005, 46.912] }
+    },
+    {
+      "type": "Feature", "id": "pr1",
+      "properties": { "mag": 3.0, "place": "5 km S of Guánica, Puerto Rico", "time": 1795600000000, "updated": 1795600100000, "type": "earthquake", "title": "M 3.0 - 5 km S of Guánica, Puerto Rico" },
+      "geometry": { "type": "Point", "coordinates": [-66.9, 17.9, 10.0] }
+    },
+    {
+      "type": "Feature", "id": "uu1",
+      "properties": { "mag": 2.1, "place": "10 km E of Eureka, Utah", "time": 1795599000000, "updated": 1795599100000, "type": "quarry blast", "title": "M 2.1 Quarry Blast - 10 km E of Eureka, Utah" },
+      "geometry": { "type": "Point", "coordinates": [-112.0, 39.9, 0.0] }
+    },
+    {
+      "type": "Feature", "id": "ak1",
+      "properties": { "mag": null, "place": "19 km W of Nikiski, Alaska", "time": 1795555881114, "updated": 1795562714380, "type": "earthquake", "title": "M ? - 19 km W of Nikiski, Alaska" },
+      "geometry": { "type": "Point", "coordinates": [-151.6, 60.7, 30.0] }
+    }
+  ]
+}

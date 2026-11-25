@@ -24,8 +24,8 @@ public class FileSeismWriter implements SeismWriter {
 	}
 
 	@Override
-	public void write(List<Seism> seisms) {
-		String content = jsonHandler.serialize(seisms, true);
+	public void write(Object object) {
+		String content = jsonHandler.serialize(object, true);
 
 		try {
 			file.getAbsoluteFile().getParentFile().mkdirs();
